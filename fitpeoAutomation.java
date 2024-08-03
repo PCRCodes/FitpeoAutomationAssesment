@@ -33,22 +33,22 @@ public class fitpeoAutomation {
         //maximizing for better view
         driver.manage().window().maximize();
 
-        // need  not to wait but to catch up with web loading speed we are using Thread . sleep to hold for 1sec;
+        // need  not wait but to catch up with web loading speed we are using Thread . sleep to hold for 1sec;
         Thread.sleep(1000);
 
-        // now clicking on revenuq calculato
+        // now clicking on revenue calculate
         driver.findElement(By.xpath("//div[text()='Revenue Calculator']")).click();
 
         //wait for one sec to catch up with browser even the selenium waits for page to load automatically we for to be more precise use this
         Thread.sleep(1000);
 
-        //scorell for better appearence
-        ((JavascriptExecutor)driver).executeScript("window.scrollBy(0,500)");
+        //scroll for better appearance
+        ((JavascriptExecutor)driver).executeScript("window.scrollBy(0,500);");
 
-        //selecting the slider element and storing in a variable
+        //selecting the slider, slandering and textfield element and storing in a variable
         WebElement sliderBox = driver.findElement(By.xpath("//span[@class='MuiSlider-root MuiSlider-colorPrimary MuiSlider-sizeMedium css-duk49p']"));
         WebElement slider = sliderBox.findElement(By.xpath("//input[@type='range']"));
-        WebElement textFiled =driver.findElement(By.xpath("//input[@type='number']"));
+        WebElement textField =driver.findElement(By.xpath("//input[@type='number']"));
 
         int width = sliderBox.getSize().getWidth();
 
@@ -62,7 +62,7 @@ public class fitpeoAutomation {
         Actions act = new Actions(driver);
         act.dragAndDropBy(slider,offset,0).build().perform();
 
-        int textFieldVal =Integer.parseInt( textFiled.getAttribute("value"));
+        int textFieldVal =Integer.parseInt( textField.getAttribute("value"));
 
         currentVal = Integer.parseInt(slider.getAttribute("value"));
 
@@ -72,7 +72,7 @@ public class fitpeoAutomation {
             System.err.println("slider  to text has error");
         }
 
-        act.moveToElement(textFiled).click().build().perform();
+        act.moveToElement(textField).click().build().perform();
 
         Robot robot = new Robot();
         robot.keyPress(KeyEvent.VK_BACK_SPACE);
@@ -103,22 +103,24 @@ public class fitpeoAutomation {
         robot.keyPress(KeyEvent.VK_0);
         robot.keyRelease(KeyEvent.VK_0);
 
-        // checkin val again
-        textFieldVal =Integer.parseInt( textFiled.getAttribute("value"));
+        // checking val again
+        textFieldVal =Integer.parseInt( textField.getAttribute("value"));
         currentVal = Integer.parseInt(slider.getAttribute("value"));
 
-        if(Objects.equals(textFieldVal,currentVal)){
+        if(textFieldVal==currentVal){
             System.out.println("Slider has no error");
         }else{
             System.err.println("slider  to text has error");
         }
 
+        //checkup boxes
+
         List<WebElement> CPTChecks = driver.findElements(By.xpath("//div[@class='MuiBox-root css-4o8pys']"));
 
-        for(int i =0;i<CPTChecks.size();i++){
-            String currentTxt = CPTChecks.get(i).findElement(By.xpath(".//p[@class='MuiTypography-root MuiTypography-body1 inter css-1s3unkt']")).getText();
-            if(Objects.equals(currentTxt, "CPT-99453") || Objects.equals(currentTxt, "CPT-99454") || Objects.equals(currentTxt, "CPT-99474")|| Objects.equals(currentTxt, "CPT-99091")){
-                WebElement currentCheck =CPTChecks.get(i).findElement(By.xpath(".//input[@class='PrivateSwitchBase-input css-1m9pwf3']"));
+        for (WebElement cptCheck : CPTChecks) {
+            String currentTxt = cptCheck.findElement(By.xpath(".//p[@class='MuiTypography-root MuiTypography-body1 inter css-1s3unkt']")).getText();
+            if (Objects.equals(currentTxt, "CPT-99453") || Objects.equals(currentTxt, "CPT-99454") || Objects.equals(currentTxt, "CPT-99474") || Objects.equals(currentTxt, "CPT-99091")) {
+                WebElement currentCheck = cptCheck.findElement(By.xpath(".//input[@class='PrivateSwitchBase-input css-1m9pwf3']"));
                 act.moveToElement(currentCheck).click().build().perform();
             }
         }
@@ -126,11 +128,11 @@ public class fitpeoAutomation {
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);",driver.findElement(By.xpath("//div[@class='MuiBox-root css-pqr6kh']")));
 
         if(Objects.equals(driver.findElement(By.xpath("/html/body/div[2]/div[1]/header/div/p[4]/p")).getText(), "$110700")){
-            System.out.println("SUCESSFULLY test Exicuted");
+            System.out.println("SUCESSFULLY test Executed");
         }else {
             System.err.println("error in total sum");
         }
-
+        
         driver.quit();
     }
 }
